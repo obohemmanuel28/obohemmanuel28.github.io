@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study | Emmanuel Oboh</title>
+  <meta name="description" content="Data analytics case study by Emmanuel Oboh, Data & BI Analyst.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230b1f44'/><rect x='7' y='17' width='4' height='8' rx='1' fill='%23c9a227'/><rect x='14' y='11' width='4' height='14' rx='1' fill='white'/><rect x='21' y='7' width='4' height='18' rx='1' fill='white'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand"><span class="brand-mark">EO</span> Emmanuel Oboh</a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav-links">
+        <a href="index.html#about">About</a>
+        <a href="index.html#skills">Skills</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="index.html#experience">Experience</a>
+        <a href="index.html#contact" class="btn btn-primary">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="case-study"></main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span data-year></span> Emmanuel Osemeikhian Oboh</span>
+      <span>Data &amp; Business Intelligence Analyst</span>
+    </div>
+  </footer>
+
+  <script src="js/projects.js?v=1"></script>
+  <script src="js/main.js?v=1"></script>
+  <script>
+    (function () {
+      const slug = new URLSearchParams(location.search).get("p");
+      const idx = LIVE_PROJECTS.findIndex(p => p.slug === slug);
+      const root = document.getElementById("case-study");
+
+      if (idx === -1) {
+        root.innerHTML = `<section><div class="container"><h1>Project not found</h1><p><a href="index.html#projects">← Back to all projects</a></p></div></section>`;
+        return;
+      }
+
+      const p = LIVE_PROJECTS[idx];
+      const prev = LIVE_PROJECTS[(idx - 1 + LIVE_PROJECTS.length) % LIVE_PROJECTS.length];
+      const next = LIVE_PROJECTS[(idx + 1) % LIVE_PROJECTS.length];
+      document.title = `${p.title} | Emmanuel Oboh`;
+
+      const todo = (what) => `<div class="placeholder"><strong>To be added:</strong> ${what}</div>`;
+      const list = (arr) => `<ul>${arr.map(x => `<li>${x}</li>`).join("")}</ul>`;
+
+      const d = p.data || {};
+      const tools = p.tools.length ? p.tools.join(", ") : "TBC";
+
+      const linkBtns = [
+        p.links.dashboard && `<a class="btn btn-primary" href="${p.links.dashboard}" target="_blank" rel="noopener">Open live dashboard ↗</a>`,
+        p.links.github && `<a class="btn btn-ghost" href="${p.links.github}" target="_blank" rel="noopener">View on GitHub ↗</a>`,
+        p.links.report && `<a class="btn btn-ghost" href="${p.links.report}" target="_blank" rel="noopener">Download report ↗</a>`
+      ].filter(Boolean).join("");
+
+      root.innerHTML = `
+        <section class="cs-hero">
+          <div class="container">
+            <a class="back-link" href="index.html#projects">← All projects</a>
+            <span class="eyebrow" style="display:block">${p.domain} · Project ${String(idx + 1).padStart(2, "0")}</span>
+            <h1>${p.title}</h1>
+            <p class="lead">${p.summary}</p>
+            ${p.role ? `<p class="cs-role"><strong>My role:</strong> ${p.role}</p>` : ""}
+            <dl class="cs-meta">
+              <div><dt>Domain</dt><dd>${p.domain}</dd></div>
+              <div><dt>Tools</dt><dd>${tools}</dd></div>
+              <div><dt>Data source</dt><dd>${d.source || "TBC"}</dd></div>
+              <div><dt>Dataset size</dt><dd>${d.size || "TBC"}</dd></div>
+            </dl>
+          </div>
+        </section>
+
+        <div class="container cs-body">
+          <nav class="cs-toc">
+            <a href="#problem">Business problem</a>
+            <a href="#data">Data</a>
+            <a href="#approach">Approach</a>
+            <a href="#insights">Key insights</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#recommendations">Recommendations</a>
+          </nav>
+          <div>
+            <section class="cs-section" id="problem" style="padding:0">
+              <h2>Business problem</h2>
+              ${p.problem ? `<p>${p.problem}</p>` : todo("What question was the business trying to answer? Who needed the answer and why?")}
+            </section>
+
+            <section class="cs-section" id="data" style="padding:0">
+              <h2>Data</h2>
+              ${p.data ? `<p>${[d.source && `<strong>Source:</strong> ${d.source}`, d.size && `<strong>Size:</strong> ${d.size}`, d.period && `<strong>Period:</strong> ${d.period}`].filter(Boolean).join(" · ")}</p>${d.notes ? `<p>${d.notes}</p>` : ""}` : todo("Where the data came from, number of rows/columns, time period, and any cleaning issues you fixed.")}
+            </section>
+
+            <section class="cs-section" id="approach" style="padding:0">
+              <h2>Approach</h2>
+              ${p.approach.length ? list(p.approach) : todo("The steps you took, e.g. cleaning in Power Query → data model → DAX measures → dashboard design.")}
+            </section>
+
+            <section class="cs-section" id="insights" style="padding:0">
+              <h2>Key insights</h2>
+              ${p.insights.length
+                ? `<div class="insights">${p.insights.map(x => `<div class="insight"><div class="v">${x.value}</div><div>${x.text}</div></div>`).join("")}</div>`
+                : todo("3–5 findings, ideally with numbers (e.g. “Top 3 vendors hold 58% of overdue payables”).")}
+            </section>
+
+            <section class="cs-section" id="dashboard" style="padding:0">
+              <h2>Dashboard</h2>
+              ${p.gallery.length
+                ? `<div class="gallery">${p.gallery.map(g => `<figure><img src="${g.src}" alt="${g.caption || p.title}" loading="lazy">${g.caption ? `<figcaption>${g.caption}</figcaption>` : ""}</figure>`).join("")}</div>`
+                : todo(`Dashboard screenshots (PNG/JPG). Drop them into <code>assets/projects/${p.slug}/</code>.`)}
+            </section>
+
+            <section class="cs-section" id="recommendations" style="padding:0">
+              <h2>Recommendations &amp; impact</h2>
+              ${p.recommendations.length ? list(p.recommendations) : todo("What the business should do based on the findings, and the expected impact.")}
+            </section>
+
+            ${linkBtns ? `<div class="cs-links" style="margin-bottom:48px">${linkBtns}</div>` : ""}
+
+            <nav class="cs-nav">
+              <a href="project.html?p=${prev.slug}">← ${prev.title}</a>
+              <a href="project.html?p=${next.slug}" style="text-align:right">${next.title} →</a>
+            </nav>
+          </div>
+        </div>`;
+    })();
+  </script>
+</body>
+</html>
