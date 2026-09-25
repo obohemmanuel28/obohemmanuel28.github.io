@@ -8,6 +8,16 @@
 
   const blankAreas = () => Object.fromEntries(C.ORIENTATIONS.map(o => [o, 0]));
 
+  function escapeHTML(str) {
+    return String(str).replace(/[&<>"']/g, ch => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+  }
+
+  function parseNonNegative(value) {
+    return Math.max(0, parseFloat(value) || 0);
+  }
+
   let roomSeq = 0;
   function newRoom(name) {
     roomSeq += 1;
@@ -61,7 +71,7 @@
     return `
     <div class="calc-room" data-room="${room.id}">
       <div class="calc-room-head">
-        <input class="calc-room-name" type="text" data-field="name" data-room="${room.id}" value="${room.name}">
+        <input class="calc-room-name" type="text" data-field="name" data-room="${room.id}" value="${escapeHTML(room.name)}">
         <div class="calc-room-head-actions">
           <span class="tag mono">Room ${String(idx + 1).padStart(2, "0")}</span>
           <button type="button" class="btn btn-ghost calc-remove" data-room="${room.id}" ${state.rooms.length <= 1 ? "disabled" : ""}>Remove</button>
@@ -219,7 +229,7 @@
         <tbody>
           ${rows.map(({ room, result }) => `
             <tr>
-              <td>${room.name}</td>
+              <td>${escapeHTML(room.name)}</td>
               <td>${result.area.toFixed(1)}</td>
               <td>${fmtW(result.sensibleW)}</td>
               <td>${fmtW(result.latentW)}</td>
@@ -250,7 +260,13 @@
     const t = e.target;
     if (!t.id || !t.id.startsWith("b-")) return;
     const key = t.id.slice(2);
-    state.building[key] = parseFloat(t.value) || 0;
+    if (key === "outdoorRH" || key === "indoorRH") {
+      state.building[key] = Math.min(100, parseNonNegative(t.value));
+    } else if (key === "safetyPct") {
+      state.building[key] = parseNonNegative(t.value);
+    } else {
+      state.building[key] = parseFloat(t.value) || 0;
+    }
     renderResults();
   });
 
@@ -263,7 +279,7 @@
 
     if (t.dataset.kind) {
       // orientation grid input (wallAreas / windowAreas)
-      room[t.dataset.kind][t.dataset.orient] = parseFloat(t.value) || 0;
+      room[t.dataset.kind][t.dataset.orient] = parseNonNegative(t.value);
       renderResults();
       return;
     }
@@ -274,7 +290,7 @@
     if (t.type === "checkbox") {
       room[field] = t.checked;
     } else if (["length", "width", "height", "occupants", "lightingW", "equipmentW", "ach"].includes(field)) {
-      room[field] = parseFloat(t.value) || 0;
+      room[field] = parseNonNegative(t.value);
     } else {
       room[field] = t.value;
     }
