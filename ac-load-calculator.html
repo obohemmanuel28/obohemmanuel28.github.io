@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AC Load Calculator | Emmanuel Oboh</title>
+  <meta name="description" content="Free room-by-room air conditioning cooling load calculator. Estimate BTU/hr, kW and recommended AC unit size using a simplified ASHRAE-style heat balance.">
+  <meta property="og:title" content="AC Load Calculator | Emmanuel Oboh">
+  <meta property="og:description" content="Room-by-room air conditioning cooling load calculator — BTU/hr, kW, tons and recommended unit size.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://obohemmanuel28.github.io/ac-load-calculator.html">
+  <link rel="canonical" href="https://obohemmanuel28.github.io/ac-load-calculator.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230b1f44'/><rect x='7' y='17' width='4' height='8' rx='1' fill='%23c9a227'/><rect x='14' y='11' width='4' height='14' rx='1' fill='white'/><rect x='21' y='7' width='4' height='18' rx='1' fill='white'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand"><span class="brand-mark">EO</span> Emmanuel Oboh</a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav-links">
+        <a href="index.html#about">About</a>
+        <a href="index.html#skills">Skills</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="index.html#experience">Experience</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="ac-load-calculator.html" class="btn btn-primary">AC Load Calculator</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="calc-hero">
+      <div class="container">
+        <a class="back-link" href="index.html#projects">← Back to portfolio</a>
+        <span class="eyebrow" style="display:block">Engineering Tool</span>
+        <h1>Air Conditioning Load Calculator</h1>
+        <p class="lead">Estimate the cooling load for each room in a building and get a recommended AC unit size. Add every room, set your design conditions, and see BTU/hr, kW and tons per room and for the whole building.</p>
+        <p class="calc-note"><strong>Note:</strong> this uses a simplified sensible/latent heat-balance method (wall &amp; roof conduction, solar gain through glass, occupants, lighting, equipment, infiltration/ventilation) for quick sizing estimates. For code-compliant design, run a full Manual J / CLTD-CLF calculation.</p>
+      </div>
+    </section>
+
+    <div class="container calc-layout">
+      <div>
+        <div class="calc-panel">
+          <h2>Design conditions</h2>
+          <p class="sub">Applied to every room in the building.</p>
+          <div id="building-form"></div>
+        </div>
+
+        <div id="rooms"></div>
+
+        <button type="button" id="add-room" class="btn btn-ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          Add room
+        </button>
+      </div>
+
+      <aside class="calc-sidebar">
+        <div class="calc-panel">
+          <h2>Building summary</h2>
+          <p class="sub">Live totals across all rooms.</p>
+          <div id="summary"></div>
+          <div class="calc-actions">
+            <button type="button" id="print-report" class="btn btn-primary">Print / save report</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span data-year></span> Emmanuel Osemeikhian Oboh</span>
+      <span>Data &amp; Business Intelligence Analyst</span>
+    </div>
+  </footer>
+
+  <script src="js/ac-calculator.js?v=1"></script>
+  <script src="js/ac-calculator-ui.js?v=1"></script>
+  <script>
+    document.querySelectorAll("[data-year]").forEach(el => (el.textContent = new Date().getFullYear()));
+    const toggle = document.querySelector(".nav-toggle");
+    const links = document.querySelector(".nav-links");
+    if (toggle && links) {
+      toggle.addEventListener("click", () => {
+        const open = links.classList.toggle("open");
+        toggle.setAttribute("aria-expanded", open);
+      });
+    }
+  </script>
+</body>
+</html>
